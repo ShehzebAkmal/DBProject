@@ -1,4 +1,4 @@
-Project Management System
+Project: Bus Management System
 
 The Flow goes like this:
 1. index.php
