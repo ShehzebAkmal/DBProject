@@ -1,0 +1,109 @@
+CREATE TABLE Driver
+(
+	Driver_id            INT NOT NULL ,
+	driver_name          CHAR(50) NULL ,
+	Number               NUMERIC(11) NULL ,
+	driver_license       CHAR VARYING() NULL ,
+	address              VARCHAR2(50) NULL ,
+ PRIMARY KEY (Driver_id)
+);
+
+CREATE TABLE Bus_Owner
+(
+	Bus_Owner_Id         INTEGER NOT NULL ,
+	Bus_Owner_Name       VARCHAR2(20) NULL ,
+	number               NUMERIC(11) NULL ,
+	address              VARCHAR2(50) NULL ,
+ PRIMARY KEY (Bus_Owner_Id)
+);
+
+
+CREATE TABLE Bus_Type
+(
+	Type_Id              INTEGER NOT NULL ,
+	Description          VARCHAR2(70) NULL ,
+	PerSeatCostWindow    INTEGER NULL ,
+	PerSeatCostAisle     INTEGER NULL ,
+ PRIMARY KEY (Type_Id)
+);
+
+
+CREATE TABLE Passenger
+(
+	User_Id              INTEGER NOT NULL ,
+	Username             VARCHAR2(20) NULL ,
+	Password             AnyType NULL ,
+	email                AnyType NULL ,
+	number               NUMERIC(11) NULL ,
+ PRIMARY KEY (User_Id)
+);
+
+
+CREATE TABLE BUS
+(
+	Bus_Id               INTEGER NOT NULL ,
+	Bus_Name             VARCHAR2(20) NULL ,
+	Parking_Address      CHAR VARYING() NULL ,
+	feul_capacity        FLOAT NULL ,
+	Available_seats      INTEGER NULL ,
+	Bus_Owner_Id         INTEGER NULL ,
+	Type_Id              INTEGER NULL ,
+	Driver_id            INT NULL ,
+ PRIMARY KEY (Bus_Id),
+FOREIGN KEY (Bus_Owner_Id) REFERENCES Bus_Owner (Bus_Owner_Id),
+FOREIGN KEY (Type_Id) REFERENCES Bus_Type (Type_Id),
+FOREIGN KEY (Driver_id) REFERENCES Driver (Driver_id)
+);
+
+
+CREATE TABLE Schedule
+(
+	Time                 INTERVAL DAY TO SECOND NOT NULL ,
+	Source               VARCHAR2(50) NULL ,
+	Destination          VARCHAR2(50) NULL ,
+	Bus_Id               INTEGER NOT NULL ,
+ PRIMARY KEY (Time,Bus_Id),
+FOREIGN KEY (Bus_Id) REFERENCES BUS (Bus_Id)
+);
+
+
+CREATE TABLE Seat
+(
+	Seat_Id              INTEGER NOT NULL ,
+	Status               CHAR(2) NULL ,
+	Bus_Id               INTEGER NULL ,
+ PRIMARY KEY (Seat_Id),
+FOREIGN KEY (Bus_Id) REFERENCES BUS (Bus_Id)
+);
+
+
+CREATE TABLE Ticket
+(
+	Ticket_Id            INTEGER NOT NULL ,
+	Source               VARCHAR2(50) NULL ,
+	Destination          VARCHAR2(50) NULL ,
+	Seat_Id              INTEGER NULL ,
+ PRIMARY KEY (Ticket_Id),
+FOREIGN KEY (Seat_Id) REFERENCES Seat (Seat_Id)
+);
+
+
+CREATE TABLE Payment
+(
+	payment_id           INTEGER NOT NULL ,
+	total_amount         INTEGER NULL ,
+	DOP                  DATE NULL ,
+	User_Id              INTEGER NULL ,
+ PRIMARY KEY (payment_id),
+FOREIGN KEY (User_Id) REFERENCES Passenger (User_Id)
+);
+
+
+CREATE TABLE Payment_details
+(
+	payment_id           INTEGER NOT NULL ,
+	Ticket_Id            INTEGER NOT NULL ,
+ PRIMARY KEY (payment_id,Ticket_Id),
+FOREIGN KEY (payment_id) REFERENCES Payment (payment_id),
+FOREIGN KEY (Ticket_Id) REFERENCES Ticket (Ticket_Id)
+);
